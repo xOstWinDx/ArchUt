@@ -1,22 +1,9 @@
-x = (
-    '[08/30/23 10:57:08] Оствинд|r атакует. Ужасающая абоминация|r получает |cffff0000критический урон|r. |cffff0000Здоровье|r снижается на |cffff0000-1007|r ед.')
-z = x.split('cffff0000')
-if 'Поглощено' in x:
-    if 'блокирует' in x:
-        print(x.split('|r')[2][3:])
-        print(int(x.split('|r')[-1].split()[3]) + abs(int(z[3].split('|r')[0])))
+import ctypes
+from ctypes.wintypes import MAX_PATH
 
-    else:
-        print(x.split('|r')[2][3:])
-        print(int(x.split('|r')[-1].split()[2]) + abs(int(z[3].split('|r')[0])))
-
-elif 'блокирует' in x:
-    print(x.split('|r')[2][3:])
-    print(abs(int(z[1].split('|r')[0])))  # Блок
+dll = ctypes.windll.shell32
+buf = ctypes.create_unicode_buffer(MAX_PATH + 1)
+if dll.SHGetSpecialFolderPathW(None, buf, 0x0005, False):
+    print(buf.value)
 else:
-    if 'атакует' in x:
-        print(x.split('|r')[1].split('атакует.')[1].strip())
-    else:
-        print(x.split('|r')[2][3:])
-        print(abs(int(z[3].split('|r')[0])))  # Дефолт
-
+    print("Failure!")

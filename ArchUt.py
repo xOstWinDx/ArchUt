@@ -16,6 +16,20 @@ import threading
 import multiprocessing
 import tgBotUp
 from tendo import singleton
+import ctypes
+
+from ctypes.wintypes import MAX_PATH
+
+dll = ctypes.windll.shell32
+buf = ctypes.create_unicode_buffer(MAX_PATH + 1)
+
+PATH_DOCU = f'C:\\Users\\{getpass.getuser()}\\Documents'
+if dll.SHGetSpecialFolderPathW(None, buf, 0x0005, False):
+    PATH_DOCU = buf.value
+else:
+    print("Failure!")
+
+
 
 inRaid = False
 gameON = False
@@ -73,8 +87,9 @@ def on_clicked():
 
 
 def DetectedRaidIn():
+    global PATH_DOCU
     try:
-        os.remove(f"C:\\Users\\{getpass.getuser()}\\Documents\\ArcheRage\\combat.log")
+        os.remove(f"{PATH_DOCU}\\ArcheRage\\combat.log")
     except FileNotFoundError:
         logging.error('Нет файла для удаления', exc_info=True)
 
@@ -103,7 +118,7 @@ def close(prog: pystray.Icon):
 def outR():
     global inRaid
     inRaid = False
-    if os.path.exists(f"C:\\Users\\{getpass.getuser()}\\Documents\\ArcheRage\\combat.log"):
+    if os.path.exists(f"{PATH_DOCU}\\ArcheRage\\combat.log"):
         if not os.path.exists('Archive'):
             os.mkdir('Archive')
         if not os.path.exists('Archive\\Combat'):
@@ -114,7 +129,7 @@ def outR():
         current_time = now.strftime("%d %b %Hч %Mм %Sс")
         name = '[' + str(current_time) + ']'
         os.mkdir(f'Archive\\Combat\\{name}')
-        os.replace(f"C:\\Users\\{getpass.getuser()}\\Documents\\ArcheRage\\combat.log",
+        os.replace(f"{PATH_DOCU}\\ArcheRage\\combat.log",
                    f"Archive\\Combat\\{name}\\Комбо_{name}_Рейд.log")
 
 
@@ -124,7 +139,7 @@ def outR():
 
 def logListenner():
     global inRaid, gameON, ProgaOn
-    ttt = open(f'C:\\Users\\{getpass.getuser()}\\Documents\\ArcheRage\\Misc.log', 'w', encoding="utf-8")
+    ttt = open(f'{PATH_DOCU}\\ArcheRage\\Misc.log', 'w', encoding="utf-8")
     ttt.close()
     while ProgaOn:
         time.sleep(2)
@@ -136,7 +151,7 @@ def logListenner():
 
             time.sleep(2)
             try:
-                with open(f"C:\\Users\\{getpass.getuser()}\\Documents\\ArcheRage\\Misc.log", "r",
+                with open(f"{PATH_DOCU}\\ArcheRage\\Misc.log", "r",
                           encoding='utf-8') as file:
                     logMisc = file.readlines()
                     for i in logMisc:
@@ -146,7 +161,7 @@ def logListenner():
                         if 'Вы покинули отряд' in i or 'расформирован.' in i or 'Вы покинули рейд.' in i and inRaid:
                             outR()
                             logMisc.remove(i)
-                f = open(f"C:\\Users\\{getpass.getuser()}\\Documents\\ArcheRage\\Misc.log", "w", encoding="utf-8")
+                f = open(f"{PATH_DOCU}\\ArcheRage\\Misc.log", "w", encoding="utf-8")
                 f.writelines(logMisc)
                 f.close()
             except Exception as d:

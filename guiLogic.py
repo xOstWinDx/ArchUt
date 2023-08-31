@@ -18,6 +18,16 @@ import threading
 from googletrans import Translator
 import logging
 
+from ctypes.wintypes import MAX_PATH
+
+dll = ctypes.windll.shell32
+buf = ctypes.create_unicode_buffer(MAX_PATH + 1)
+PATH_DOCU = f'C:\\Users\\{getpass.getuser()}\\Documents'
+if dll.SHGetSpecialFolderPathW(None, buf, 0x0005, False):
+    PATH_DOCU = buf.value
+else:
+    print("Failure!")
+
 customtkinter.set_appearance_mode("dark")
 
 Id_Dir = {}
@@ -498,11 +508,12 @@ class MyMenuFrame(customtkinter.CTkFrame):
             self.textbox.insert("0.0", x.read())
 
     def StartLogTrans(self, textbox: customtkinter.CTkTextbox):
+        global PATH_DOCU
         try:
             translator = Translator()
             translator.raise_Exception = True
             while self.activWind == 'Trans' and self.ProgaOn:
-                with open(f"C:\\Users\\{getpass.getuser()}\\Documents\\ArcheRage\\Chat.log", 'r',
+                with open(f"{PATH_DOCU}\\ArcheRage\\Chat.log", 'r',
                           encoding='utf-8') as chatLog:
                     ff = chatLog.readlines()
                     try:
@@ -527,7 +538,7 @@ class MyMenuFrame(customtkinter.CTkFrame):
                                 x = translator.translate(i, src='zh-cn', dest='ru').text + '\n'
                                 textbox.insert(customtkinter.END, x)
                                 self.text_bar += x
-                        f = open(f'C:\\Users\\{getpass.getuser()}\\Documents\\ArcheRage\\Chat.log', 'w',
+                        f = open(f'{PATH_DOCU}\\ArcheRage\\Chat.log', 'w',
                                  encoding='utf-8')
                         f.close()
 
@@ -692,12 +703,13 @@ class App(customtkinter.CTk):
             sys.exit()
 
     def doChatDump(self):
+        global PATH_DOCU
         if len(self.menuFrame.text_bar) > 0:
             now = datetime.datetime.now()
             name = now.strftime("%d %b %Hч %Mм %Sс")
             x = open(f'Archive\\ChatBack\\[{name}]', 'w', encoding='utf-8')
             x.write(self.menuFrame.text_bar)
-            x1 = open(f"C:\\Users\\{getpass.getuser()}\\Documents\\ArcheRage\\Chat.log", 'w')
+            x1 = open(f"{PATH_DOCU}\\ArcheRage\\Chat.log", 'w')
             x1.close()
 
     def rrrr(self):

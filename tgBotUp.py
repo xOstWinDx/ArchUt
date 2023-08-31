@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import ctypes
 import time
 import datetime
 import json
@@ -12,6 +13,16 @@ import os
 import getpass
 import threading
 import logging
+from ctypes.wintypes import MAX_PATH
+
+dll = ctypes.windll.shell32
+buf = ctypes.create_unicode_buffer(MAX_PATH + 1)
+PATH_DOCU = f'C:\\Users\\{getpass.getuser()}\\Documents'
+if dll.SHGetSpecialFolderPathW(None, buf, 0x0005, False):
+    PATH_DOCU = buf.value
+else:
+    print("Failure!")
+
 
 logging.basicConfig(level=logging.INFO, filename="loggs\\ArchUt.log", filemode="a",
                     format="%(asctime)s %(levelname)s %(message)s")
@@ -245,10 +256,11 @@ class MyNotifi:
         self.SendNotify('Кирка')
 
     def DoLogsNotify(self):
+        global PATH_DOCU
         pakTh = threading.Timer(120, self.SendNotify, ['Паки', 'Gg'])
         while True:
             try:
-                with open(f"C:\\Users\\{getpass.getuser()}\\Documents\\ArcheRage\\Misc.log", "r",
+                with open(f"{PATH_DOCU}\\ArcheRage\\Misc.log", "r",
                           encoding='utf-8') as mis:
                     logs = mis.readlines()
                     for i in logs:
@@ -284,7 +296,7 @@ class MyNotifi:
                             logging.info("Кирку нашёл")
                             threading.Timer(10800, self.SendNotify, args=[s]).start()
                             logs.remove(i)
-                f = open(f"C:\\Users\\{getpass.getuser()}\\Documents\\ArcheRage\\Misc.log", "w", encoding="utf-8")
+                f = open(f"{PATH_DOCU}\\ArcheRage\\Misc.log", "w", encoding="utf-8")
                 f.writelines(logs)
                 f.close()
                 time.sleep(2)
