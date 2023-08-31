@@ -77,17 +77,20 @@ class MyNotifi:
             self.API_TOKEN = os.getenv('TOKEN')
 
         @self.bot.callback_query_handler(func=lambda call: True)
-        def callback(call):
+        def callback(call: types.CallbackQuery):
             global DoneDay
             if call.message:
                 if call.data not in DoneDay:
                     DoneDay.append(call.data)
-                    #self.bot.send_message(self.CHAT_ID,f'{call.data} - Выполненно')
-                    self.bot.edit_message_text(chat_id=self.CHAT_ID,message_id=call.message.id,text=f'{call.data} - Выполненно')
+                    # self.bot.send_message(self.CHAT_ID,f'{call.data} - Выполненно')
+                    self.bot.edit_message_text(chat_id=self.CHAT_ID, message_id=call.message.id,
+                                               text=f'{call.data} - Выполненно')
+
 
     def clearDone(self):
         global DoneDay
         DoneDay = []
+
     def gettime(self):
         logging.info('Отправил запрос на сайт')
         req = requests.get("https://aatime.ru/wp-content/themes/neve/eventspage-ajax.php", self.headers)
@@ -123,7 +126,7 @@ class MyNotifi:
                         self.bot.send_message(CHAT_ID, f'\U0001F575 {inf[11:]}')
                     elif name == 'Вексели':
                         markup = types.InlineKeyboardMarkup(row_width=1)
-                        done = types.InlineKeyboardButton('\U00002714', callback_data=name)
+                        done = types.InlineKeyboardButton('|Выполнено:\U00002705|', callback_data=name)
                         markup.add(done)
                         self.bot.send_message(CHAT_ID, f'\U0001F331 Не забудь сделать вексели :)', reply_markup=markup)
                     elif name == 'Кирка':
@@ -145,9 +148,10 @@ class MyNotifi:
                     else:
                         if self.zagl:
                             markup = types.InlineKeyboardMarkup(row_width=1)
-                            done = types.InlineKeyboardButton('\U00002714', callback_data=name)
+                            done = types.InlineKeyboardButton('|Выполнено:\U00002705|', callback_data=name)
                             markup.add(done)
-                            self.bot.send_message(CHAT_ID, f'\U00002694 Через 10 минут начнётся: {name}, не пропусти!',reply_markup=markup)
+                            self.bot.send_message(CHAT_ID, f'\U00002694 Через 10 минут начнётся: {name}, не пропусти!',
+                                                  reply_markup=markup)
                             self.zagl = False
                             threading.Timer(500, zag).start()
                             logging.info(f'Поставил заглушку {self.zagl}')
@@ -231,7 +235,7 @@ class MyNotifi:
         schedule.every().saturday.at("20:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Око бури')
 
         # schedule.every().day.at("03:00", timezone("Europe/Moscow")).do(self.SendNotify, 'Вексели')
-        schedule.every(3).seconds.do(self.SendNotify, 'Кровь')
+
 
         while True:
             schedule.run_pending()
