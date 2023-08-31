@@ -24,6 +24,7 @@ class AnalyseLogAndDoGraph:
                     damage_dict = dict()
                     tank_dict = dict()
                     wewe = file.readlines()
+                    print(wewe)
                     for i in wewe:
                         if 'восстанавливает' in i and 'маны' not in i:
                             if i[20:i.index('|r')] not in hill_dict:

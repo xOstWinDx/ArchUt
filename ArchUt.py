@@ -129,6 +129,7 @@ def outR():
         current_time = now.strftime("%d %b %Hч %Mм %Sс")
         name = '[' + str(current_time) + ']'
         os.mkdir(f'Archive\\Combat\\{name}')
+        print(name)
         os.replace(f"{PATH_DOCU}\\ArcheRage\\combat.log",
                    f"Archive\\Combat\\{name}\\Комбо_{name}_Рейд.log")
 
