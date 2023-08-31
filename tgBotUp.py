@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from pytz import timezone
 import schedule
 import telebot
+from telebot import types
 import os
 import getpass
 import threading
@@ -15,8 +16,10 @@ import logging
 logging.basicConfig(level=logging.INFO, filename="loggs\\ArchUt.log", filemode="a",
                     format="%(asctime)s %(levelname)s %(message)s")
 
+DoneDay = []
 
-class MyNotifi():
+
+class MyNotifi:
     def __init__(self):
         self.zagl = True
         self.tm = None
@@ -38,12 +41,12 @@ class MyNotifi():
             logging.info('Пытаюсь получить токен')
             if not os.path.exists('.envChat'):
                 logging.error('Нет файла с чат айди')
-                x = open('.envChat', 'w',encoding='utf-8')
+                x = open('.envChat', 'w', encoding='utf-8')
                 x.write('')
                 x.close()
             if not os.path.exists('.envTok'):
                 logging.error('Нет файла с токеном')
-                x = open('.envTok', 'w',encoding='utf-8')
+                x = open('.envTok', 'w', encoding='utf-8')
                 x.write('')
                 x.close()
             load_dotenv('.envChat')
@@ -73,6 +76,18 @@ class MyNotifi():
             self.CHAT_ID = os.getenv('CHATID')
             self.API_TOKEN = os.getenv('TOKEN')
 
+        @self.bot.callback_query_handler(func=lambda call: True)
+        def callback(call):
+            global DoneDay
+            if call.message:
+                if call.data not in DoneDay:
+                    DoneDay.append(call.data)
+                    #self.bot.send_message(self.CHAT_ID,f'{call.data} - Выполненно')
+                    self.bot.edit_message_text(chat_id=self.CHAT_ID,message_id=call.message.id,text=f'{call.data} - Выполненно')
+
+    def clearDone(self):
+        global DoneDay
+        DoneDay = []
     def gettime(self):
         logging.info('Отправил запрос на сайт')
         req = requests.get("https://aatime.ru/wp-content/themes/neve/eventspage-ajax.php", self.headers)
@@ -82,6 +97,7 @@ class MyNotifi():
         return ArchTime
 
     def SendNotify(self, name, inf: str = 'Default'):
+        global DoneDay
         time.sleep(0.5)
         CHAT_ID = os.getenv('CHATID')
 
@@ -92,7 +108,7 @@ class MyNotifi():
             with open("Archive/Tg_Bot/Save.txt", 'r') as file:
                 fff = file.read().lstrip()
                 save = json.loads(fff)
-                if name in save:
+                if name in save and name not in DoneDay:
                     if name == 'Аук':
                         self.bot.send_message(CHAT_ID, f"\U0001F4B0 {inf[11:].replace('|,', '').replace(';', '')}")
                     elif name == 'Паки':
@@ -106,7 +122,10 @@ class MyNotifi():
                     elif name == 'Друг':
                         self.bot.send_message(CHAT_ID, f'\U0001F575 {inf[11:]}')
                     elif name == 'Вексели':
-                        self.bot.send_message(CHAT_ID, f'\U0001F331 Не забудь сделать вексели :)')
+                        markup = types.InlineKeyboardMarkup(row_width=1)
+                        done = types.InlineKeyboardButton('\U00002714', callback_data=name)
+                        markup.add(done)
+                        self.bot.send_message(CHAT_ID, f'\U0001F331 Не забудь сделать вексели :)', reply_markup=markup)
                     elif name == 'Кирка':
                         self.bot.send_message(CHAT_ID, '\U000026CF У тебя откатилась новенькая кирка :D')
                     elif name == 'Новый день':
@@ -125,13 +144,13 @@ class MyNotifi():
                         self.bot.send_message(CHAT_ID, f'\U0001F3AAЧерез 30 минут начнётся: {name}, не пропусти!')
                     else:
                         if self.zagl:
-                            self.bot.send_message(CHAT_ID, f'\U00002694 Через 10 минут начнётся: {name}, не пропусти!')
+                            markup = types.InlineKeyboardMarkup(row_width=1)
+                            done = types.InlineKeyboardButton('\U00002714', callback_data=name)
+                            markup.add(done)
+                            self.bot.send_message(CHAT_ID, f'\U00002694 Через 10 минут начнётся: {name}, не пропусти!',reply_markup=markup)
                             self.zagl = False
                             threading.Timer(500, zag).start()
                             logging.info(f'Поставил заглушку {self.zagl}')
-                            print(self.zagl)
-                        else:
-                            print("ggggg")
 
 
 
@@ -169,6 +188,8 @@ class MyNotifi():
             time.sleep(1)
 
     def DoNotifyRealTime(self):
+        schedule.every().day.at("00:00", timezone("Europe/Moscow")).do(self.clearDone)
+
         schedule.every().day.at("12:20", timezone("Europe/Moscow")).do(self.SendNotify, 'Гроза над морем')
         schedule.every().day.at("21:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Гроза над морем')
 
@@ -209,7 +230,8 @@ class MyNotifi():
         schedule.every().thursday.at("20:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Око бури')
         schedule.every().saturday.at("20:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Око бури')
 
-        # schedule.every(1).second.do(self.SendNotify, 'Тест')
+        # schedule.every().day.at("03:00", timezone("Europe/Moscow")).do(self.SendNotify, 'Вексели')
+        schedule.every(3).seconds.do(self.SendNotify, 'Кровь')
 
         while True:
             schedule.run_pending()
