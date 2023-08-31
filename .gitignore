@@ -7,13 +7,14 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+.idea/
+archut.build
 Archive/ChatBack/*
 Archive/Combat/*
 Archive/IdDir.txt
 .envChat
 .envTok
 .Python
-archut.build
 archut.dist
 loggs/*
 build/
