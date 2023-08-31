@@ -11,6 +11,7 @@ __pycache__/
 archut.build
 Archive/ChatBack/*
 Archive/Combat/*
+Archive/Tg_Bot/*
 Archive/IdDir.txt
 .envChat
 .envTok
