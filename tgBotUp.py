@@ -1,0 +1,273 @@
+# -*- coding: utf-8 -*-
+import time
+import datetime
+import json
+import requests
+from dotenv import load_dotenv
+from pytz import timezone
+import schedule
+import telebot
+import os
+import getpass
+import threading
+import logging
+
+logging.basicConfig(level=logging.INFO, filename="loggs\\ArchUt.log", filemode="a",
+                    format="%(asctime)s %(levelname)s %(message)s")
+
+
+class MyNotifi():
+    def __init__(self):
+        self.zagl = True
+        self.tm = None
+        self.st_accept = "text/html"  # говорим веб-серверу,
+        # что хотим получить html
+        # имитируем подключение через браузер Mozilla на macOS
+        st_useragent = (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_3_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 "
+            "Safari/605.1.15")
+        # формируем хеш заголовков
+        self.headers = {
+            "Accept": self.st_accept,
+            "User-Agent": st_useragent
+        }
+
+        # считываем текст HTML-документа
+        while True:
+            time.sleep(5)
+            logging.info('Пытаюсь получить токен')
+            load_dotenv('.envChat')
+            load_dotenv('.envTok')
+            self.CHAT_ID = os.getenv('CHATID')
+            self.API_TOKEN = os.getenv('TOKEN')
+            try:
+                if len(self.API_TOKEN) > 5:
+                    self.bot = telebot.TeleBot(self.API_TOKEN)
+                    t1 = threading.Thread(target=self.bot.polling)
+                    t1.start()
+                break
+            except Exception:
+                logging.warning('Токен не верный')
+        logging.info("Успешно соеденился с ботом")
+
+        @self.bot.message_handler(commands=['start'])
+        def start(message):
+            global CHAT_ID
+            xs = open('.envChat', 'w')
+            xs.write(f"CHATID={str(message.chat.id)}")
+            xs.close()
+            CHAT_ID = os.getenv('CHATID')
+            self.bot.send_message(message.chat.id, 'Бот успешно сохранил айди чата')
+            load_dotenv('.envChat')
+            load_dotenv('.envTok')
+            self.CHAT_ID = os.getenv('CHATID')
+            self.API_TOKEN = os.getenv('TOKEN')
+
+    def gettime(self):
+        logging.info('Отправил запрос на сайт')
+        req = requests.get("https://aatime.ru/wp-content/themes/neve/eventspage-ajax.php", self.headers)
+        src = req.text
+        x = src.index('u0445:')
+        ArchTime = src[x + 9:x + 14].split(':')
+        return ArchTime
+
+    def SendNotify(self, name, inf: str = 'Default'):
+        time.sleep(0.5)
+        CHAT_ID = os.getenv('CHATID')
+
+        def zag():
+            self.zagl = True
+
+        try:
+            with open("Archive/Tg_Bot/Save.txt", 'r') as file:
+                fff = file.read().lstrip()
+                save = json.loads(fff)
+                if name in save:
+                    if name == 'Аук':
+                        self.bot.send_message(CHAT_ID, f"\U0001F4B0 {inf[11:].replace('|,', '').replace(';', '')}")
+                    elif name == 'Паки':
+                        now = datetime.datetime.now()
+                        now += datetime.timedelta(hours=8)
+                        current_time = now.strftime("%H:%M")
+                        self.bot.send_message(CHAT_ID,
+                                              f'\U0001F4E9 Выручка от продажи паков будет выслана вам по почте в {current_time} по МСК')
+                    elif name == 'Мирка':
+                        self.bot.send_message(CHAT_ID, f'\U000026F5 Началась мирка на сверкашке, можно повозить :3')
+                    elif name == 'Друг':
+                        self.bot.send_message(CHAT_ID, f'\U0001F575 {inf[11:]}')
+                    elif name == 'Вексели':
+                        self.bot.send_message(CHAT_ID, f'\U0001F331 Не забудь сделать вексели :)')
+                    elif name == 'Кирка':
+                        self.bot.send_message(CHAT_ID, '\U000026CF У тебя откатилась новенькая кирка :D')
+                    elif name == 'Новый день':
+                        self.bot.send_message(CHAT_ID, '\U0001F55B Скоро рейд на новый день, успей вступить!')
+                    elif name == 'Даскшир':
+                        self.bot.send_message(CHAT_ID, f'\U0001F6E1 Через 10 минут начнётся: {name}, не пропусти!')
+                    elif name == 'Гроза над морем' or name == 'Око бури':
+                        self.bot.send_message(CHAT_ID, f'\U0001F419 Через 10 минут начнётся: {name}, не пропусти!')
+                    elif name == 'Кракен' or name == 'Левиафан':
+                        self.bot.send_message(CHAT_ID, f'\U0001F419 Через 30 минут начнётся: {name}, не пропусти!')
+                    elif name == 'Дельфиец':
+                        self.bot.send_message(CHAT_ID, f'\U0001F30A Через 30 минут начнётся: {name}, не пропусти!')
+                    elif name == 'Ксанатос':
+                        self.bot.send_message(CHAT_ID, f'\U0001F432 Через 30 минут начнётся: {name}, не пропусти!')
+                    elif name == 'Осада':
+                        self.bot.send_message(CHAT_ID, f'\U0001F3AAЧерез 30 минут начнётся: {name}, не пропусти!')
+                    else:
+                        if self.zagl:
+                            self.bot.send_message(CHAT_ID, f'\U00002694 Через 10 минут начнётся: {name}, не пропусти!')
+                            self.zagl = False
+                            threading.Timer(500, zag).start()
+                            logging.info(f'Поставил заглушку {self.zagl}')
+                            print(self.zagl)
+                        else:
+                            print("ggggg")
+
+
+
+        except Exception:
+            logging.error("Увед багнулся", exc_info=True)
+
+    def DoNotifyInGameTime(self):
+        def updatetime():
+            while True:
+                time.sleep(200)
+                times = self.gettime()
+                self.tm = datetime.timedelta(hours=int(times[0]), minutes=int(times[1]))
+                logging.info(f'Скорректировал время {self.tm}')
+
+        times = self.gettime()
+        self.tm = datetime.timedelta(hours=int(times[0]), minutes=int(times[1]))
+        threading.Thread(target=updatetime, daemon=True).start()
+        while True:
+            self.tm += datetime.timedelta(0, 6)
+            if datetime.timedelta(hours=4, minutes=50) < self.tm < datetime.timedelta(hours=5, minutes=10):
+                self.SendNotify("АГЛ")
+                logging.info(f'АГЛ {self.tm} {self.zagl}')
+
+            if datetime.timedelta(hours=10, minutes=50) < self.tm < datetime.timedelta(hours=11, minutes=10):
+                self.SendNotify("Кровь")
+                logging.info(f'Кровь {self.tm} {self.zagl}')
+
+            if datetime.timedelta(hours=22, minutes=50) < self.tm < datetime.timedelta(hours=23, minutes=10):
+                self.SendNotify("Призрачка")
+                logging.info(f'Призрачка {self.tm} {self.zagl}')
+
+            if datetime.timedelta(hours=16, minutes=50) < self.tm < datetime.timedelta(hours=17, minutes=10):
+                self.SendNotify("Анталон")
+                logging.info(f'Анталон {self.tm} {self.zagl}')
+            time.sleep(1)
+
+    def DoNotifyRealTime(self):
+        schedule.every().day.at("12:20", timezone("Europe/Moscow")).do(self.SendNotify, 'Гроза над морем')
+        schedule.every().day.at("21:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Гроза над морем')
+
+        schedule.every().day.at("23:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Новый день')
+
+        schedule.every().day.at("10:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Даскшир')
+        schedule.every().day.at("20:20", timezone("Europe/Moscow")).do(self.SendNotify, 'Дискшир')
+
+        schedule.every().day.at("03:00", timezone("Europe/Moscow")).do(self.SendNotify, 'Вексели')
+        schedule.every().day.at("23:00", timezone("Europe/Moscow")).do(self.SendNotify, 'Вексели')
+
+        schedule.every().sunday.at("10:20", timezone("Europe/Moscow")).do(self.SendNotify, 'Гартрейн')
+        schedule.every().sunday.at("19:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Гартрейн')
+        schedule.every().monday.at("10:20", timezone("Europe/Moscow")).do(self.SendNotify, 'Гартрейн')
+        schedule.every().monday.at("19:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Гартрейн')
+        schedule.every().wednesday.at("10:20", timezone("Europe/Moscow")).do(self.SendNotify, 'Гартрейн')
+        schedule.every().wednesday.at("19:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Гартрейн')
+        schedule.every().friday.at("10:20", timezone("Europe/Moscow")).do(self.SendNotify, 'Гартрейн')
+        schedule.every().friday.at("19:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Гартрейн')
+
+        schedule.every().day.at('19:45', timezone("Europe/Moscow")).do(self.SendNotify, 'Дельфиец')
+
+        schedule.every().tuesday.at('19:35', timezone("Europe/Moscow")).do(self.SendNotify, 'Левиафан')
+        schedule.every().thursday.at('19:35', timezone("Europe/Moscow")).do(self.SendNotify, 'Левиафан')
+        schedule.every().saturday.at('19:35', timezone("Europe/Moscow")).do(self.SendNotify, 'Левиафан')
+
+        schedule.every().wednesday.at('20:30', timezone("Europe/Moscow")).do(self.SendNotify, 'Осада')
+
+        schedule.every().tuesday.at('21:00', timezone("Europe/Moscow")).do(self.SendNotify, 'Ксанатос')
+        schedule.every().thursday.at('21:00', timezone("Europe/Moscow")).do(self.SendNotify, 'Ксанатос')
+        schedule.every().sunday.at('21:00', timezone("Europe/Moscow")).do(self.SendNotify, 'Ксанатос')
+
+        schedule.every().tuesday.at('22:00', timezone("Europe/Moscow")).do(self.SendNotify, 'Кракен')
+        schedule.every().thursday.at('22:00', timezone("Europe/Moscow")).do(self.SendNotify, 'Кракен')
+        schedule.every().sunday.at('22:00', timezone("Europe/Moscow")).do(self.SendNotify, 'Кракен')
+
+        schedule.every().tuesday.at("20:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Око бури')
+        schedule.every().thursday.at("20:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Око бури')
+        schedule.every().saturday.at("20:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Око бури')
+
+        # schedule.every(1).second.do(self.SendNotify, 'Тест')
+
+        while True:
+            schedule.run_pending()
+            time.sleep(1)
+
+    def doKirkaTimer(self):
+        self.SendNotify('Кирка')
+
+    def DoLogsNotify(self):
+        pakTh = threading.Timer(120, self.SendNotify, ['Паки', 'Gg'])
+        while True:
+            try:
+                with open(f"C:\\Users\\{getpass.getuser()}\\Documents\\ArcheRage\\Misc.log", "r",
+                          encoding='utf-8') as mis:
+                    logs = mis.readlines()
+                    for i in logs:
+                        if "области «Полуостров Падающих Звезд» назрел конфликт." in i:
+                            self.SendNotify('Мечи')
+                            logs.remove(i)
+                        if "области «Эфен'Хал» назрел конфликт." in i:
+                            self.SendNotify('Эфен')
+                            logs.remove(i)
+                        if "области «Бухта китобоев» началась война." in i:
+                            self.SendNotify('Бухта')
+                            logs.remove(i)
+                        if "Выручка от сделки будет выслана вам по почте в течение 8 часов." in i:
+                            if pakTh.is_alive():
+                                pakTh.cancel()
+                                pakTh = threading.Timer(120, self.SendNotify, ['Паки', i])
+                                pakTh.start()
+                            else:
+                                pakTh = threading.Timer(120, self.SendNotify, ['Паки', i])
+                                pakTh.start()
+                            logs.remove(i)
+                        if "выкуплен с аукциона" in i:
+                            self.SendNotify('Аук', i)
+                            logs.remove(i)
+                        if "Война в области «Сверкающее побережье» завершена." in i:
+                            self.SendNotify('Мирка', i)
+                            logs.remove(i)
+                        if 'входит в игру.' in i:
+                            self.SendNotify('Друг', i)
+                            logs.remove(i)
+                        if 'Использовано: [Новенькая кирка]' in i:
+                            s = 'Кирка'
+                            logging.info("Кирку нашёл")
+                            threading.Timer(10800, self.SendNotify, args=[s]).start()
+                            logs.remove(i)
+                f = open(f"C:\\Users\\{getpass.getuser()}\\Documents\\ArcheRage\\Misc.log", "w", encoding="utf-8")
+                f.writelines(logs)
+                f.close()
+                time.sleep(2)
+            except Exception:
+                logging.error("Ошибка бота, чтения логов", exc_info=True)
+                time.sleep(2)
+                continue
+
+    def StartBot(self):
+        try:
+
+            n1 = threading.Thread(target=self.DoNotifyRealTime, daemon=True)
+            n1.start()
+
+            n2 = threading.Thread(target=self.DoNotifyInGameTime, daemon=True)
+            n2.start()
+            n3 = threading.Thread(target=self.DoLogsNotify, daemon=True)
+            n3.start()
+            logging.info("Запустил все потоки бота")
+        except Exception as x1:
+            logging.critical("Ошибка запуска потоков бота", exc_info=True)
+            exit(0)
