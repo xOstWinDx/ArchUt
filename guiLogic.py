@@ -42,7 +42,10 @@ class getSpisok():
                 Id_Dir = json.loads(xx)
         except:
             pass
-
+        if not os.path.exists('Archive'):
+            os.mkdir('Archive')
+        if not os.path.exists('Archive\\Combat'):
+            os.mkdir('Archive\\Combat')
         with open('Archive\\IdDir.txt', 'w', encoding='utf-8') as idfd:
             xx = os.listdir('Archive/Combat')
             for i in xx:
@@ -80,7 +83,9 @@ class MyCheckFrame(customtkinter.CTkScrollableFrame):
         return checked_checkboxes
 
     def tuk(self):
-        fff = open('Archive/Tg_Bot/Save.txt', 'w')
+        if not os.path.exists('Archive\\Tg_Bot'):
+            os.mkdir('Archive\\Tg_Bot')
+        fff = open('Archive\\Tg_Bot\\Save.txt', 'w')
         x = self.get()
         json.dump(x, fff)
 
@@ -127,6 +132,7 @@ class MyTgBotFtame(customtkinter.CTkFrame):
         self.rigBar.columnconfigure((0), weight=1)
         self.entry = customtkinter.CTkEntry(self.rigBar, font=("TkDefaultFont", 16, 'bold'))
         self.entry.bind("<Button-1>", self.handl_click)
+        self.entry.bind('<Return>', process)
         self.entry.grid(row=0, column=0, sticky='nsew', padx=4, pady=4)
 
         self.butapply = customtkinter.CTkButton(self.rigBar, text='Apply', command=self.savaTok)
@@ -451,6 +457,8 @@ class MyMenuFrame(customtkinter.CTkFrame):
         self.updateFrame(self.activWind)
 
     def getChatList(self):
+        if not os.path.exists('Archive/ChatBack'):
+            os.mkdir('Archive/ChatBack')
         return os.listdir('Archive/ChatBack')
 
     def pressChanRadio(self):

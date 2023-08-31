@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 import matplotlib
 
 import logging
-
+if not os.path.exists('loggs'):
+    os.mkdir('loggs')
 logging.basicConfig(level=logging.INFO, filename="loggs\\ArchUt.log", filemode="a",
                     format="%(asctime)s %(levelname)s %(message)s")
 

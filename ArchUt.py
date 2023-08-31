@@ -99,6 +99,10 @@ def outR():
     global inRaid
     inRaid = False
     if os.path.exists(f"C:\\Users\\{getpass.getuser()}\\Documents\\ArcheRage\\combat.log"):
+        if not os.path.exists('Archive'):
+            os.mkdir('Archive')
+        if not os.path.exists('Archive\\Combat'):
+            os.mkdir('Archive\\Combat')
         logging.info("Закончилось отслеживание")
         now = datetime.now()
         logging.info(now)

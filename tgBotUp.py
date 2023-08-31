@@ -36,6 +36,16 @@ class MyNotifi():
         while True:
             time.sleep(5)
             logging.info('Пытаюсь получить токен')
+            if not os.path.exists('.envChat'):
+                logging.error('Нет файла с чат айди')
+                x = open('.envChat', 'w',encoding='utf-8')
+                x.write('')
+                x.close()
+            if not os.path.exists('.envTok'):
+                logging.error('Нет файла с токеном')
+                x = open('.envTok', 'w',encoding='utf-8')
+                x.write('')
+                x.close()
             load_dotenv('.envChat')
             load_dotenv('.envTok')
             self.CHAT_ID = os.getenv('CHATID')
