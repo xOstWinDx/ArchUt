@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import ctypes
 import logging
 import getpass
 import sys
@@ -20,6 +21,8 @@ inRaid = False
 gameON = False
 ProgaOn = True
 image = PIL.Image.open('Source/logo.ico')
+
+ctypes.windll.shcore.SetProcessDpiAwareness(2)
 
 locale.setlocale(locale.LC_TIME, ('ru_RU', 'UTF-8'))
 locale.setlocale(locale.LC_CTYPE, ('ru_RU', 'UTF-8'))
@@ -43,7 +46,9 @@ windowThread: threading.Thread = None
 def window():
     global app
     try:
+
         app = guiLogic.App()
+        print(app.winfo_screenwidth())
         # app.attributes("-topmost", True)
         app.iconbitmap(default="Source\\logo.ico")
 

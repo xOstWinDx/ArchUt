@@ -5,6 +5,7 @@ import getpass
 import os
 import sys
 import time
+import tkinter
 
 import telebot
 import telebot.apihelper
@@ -655,14 +656,23 @@ class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title("ArchUt")
-        self.geometry("1030x680")
+        self.center_window(1030, 680)
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=0)
 
         self.menuFrame = MyMenuFrame(self)
         self.menuFrame.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
 
+    def center_window(self,width=1030, height=680):
+        # get screen width and height
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+
+        # calculate position x and y coordinates
+        x = (screen_width / 2) - (width / 2)
+        y = (screen_height / 2) - (height / 2)
+        self.title("ArchUt")
+        self.geometry('%dx%d+%d+%d' % (width, height, x, y))
     def ifclosed(self, progOn):
         if not progOn:
             self.menuFrame.ProgaOn = progOn
