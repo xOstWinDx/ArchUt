@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import ctypes
 import datetime
 import getpass
 import os
@@ -132,9 +133,10 @@ class MyTgBotFtame(customtkinter.CTkFrame):
         self.rigBar.columnconfigure((0), weight=1)
         self.entry = customtkinter.CTkEntry(self.rigBar, font=("TkDefaultFont", 16, 'bold'))
         self.entry.bind("<Button-1>", self.handl_click)
-        self.entry.bind('<Return>', process)
-        self.entry.grid(row=0, column=0, sticky='nsew', padx=4, pady=4)
 
+        self.entry.grid(row=0, column=0, sticky='nsew', padx=4, pady=4)
+        self.entry.bind('<Return>', self.savaTok)
+        self.entry.bind("<Control-KeyPress>", self.keysMy)
         self.butapply = customtkinter.CTkButton(self.rigBar, text='Apply', command=self.savaTok)
         self.butapply.grid(row=0, column=1, columnspan=1, sticky='nsew', padx=4, pady=4)
 
@@ -142,12 +144,29 @@ class MyTgBotFtame(customtkinter.CTkFrame):
 
         image_label.grid(row=0, column=1, sticky='nsew', padx=4, pady=4)
 
+    def is_ru_lang_keyboard(self):
+        u = ctypes.windll.LoadLibrary("user32.dll")
+        pf = getattr(u, "GetKeyboardLayout")
+        return hex(pf(0)) == '0x4190419'
+    def keysMy(self, event):
+        if self.is_ru_lang_keyboard():
+            if event.keycode == 86:
+                event.widget.event_generate("<<Paste>>")
+            if event.keycode == 67:
+                event.widget.event_generate("<<Copy>>")
+            if event.keycode == 88:
+                event.widget.event_generate("<<Cut>>")
+            if event.keycode == 65535:
+                event.widget.event_generate("<<Clear>>")
+            if event.keycode == 65:
+                event.widget.event_generate("<<SelectAll>>")
+
     def handl_click(self, event):
         if self.entry.cget('text_color') == 'LightCoral' and len(self.entry.get()) > 0:
             self.entry.delete(0, last_index=customtkinter.END)
             self.entry.configure(text_color='white')
 
-    def savaTok(self):
+    def savaTok(self, event=''):
         if self.entry.cget('state') != 'disabled':
             try:
                 if self.entry.get() != '':
