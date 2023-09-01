@@ -26,6 +26,6 @@ Documentation Here
 
 ## Developers
 
-- [Alexey](https://github.com/xOstWinDx)https://github.com/xOstWinDx)
+- [Alexey: ](https://github.com/xOstWinDx)https://github.com/xOstWinDx)
 
 ## License
