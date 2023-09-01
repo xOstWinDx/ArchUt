@@ -5,7 +5,15 @@
 
 ## About
 
-About Text Here
+Программа созданная для отслеживания игровых логов и их парсинга.
+Отслеживает:
+ урон наносимый в рейде
+ хил членов рейда
+ количесвто вытанкованого урона
+
+ различные игровые ивенты, настаиваемые внутри приложения.
+ 
+
 
 ## Documentation
 
@@ -18,6 +26,6 @@ Documentation Here
 
 ## Developers
 
-- [Delevoper Name](GitHub Profile Link)
+- [Alexey](https://github.com/xOstWinDx)https://github.com/xOstWinDx)
 
 ## License
