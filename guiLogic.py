@@ -28,6 +28,7 @@ else:
     logging.error('Не удалось узнать путь Доков, беруться дефолтные')
 
 customtkinter.set_appearance_mode("dark")
+customtkinter.set_default_color_theme("blue")
 
 Id_Dir = {}
 logging.basicConfig(level=logging.INFO, filename="loggs\\ArchUt.log", filemode="a",
@@ -81,7 +82,9 @@ class MyCheckFrame(customtkinter.CTkScrollableFrame):
         self.title.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="ew")
 
         for i, value in enumerate(self.values):
-            checkbox = customtkinter.CTkSwitch(self, text=value, font=("TkDefaultFont", 16), command=self.tuk,
+            checkbox = customtkinter.CTkSwitch(self, text=value,
+                                               font=customtkinter.CTkFont(family='Comic Sans MS', size=16),
+                                               command=self.tuk,
                                                switch_width=45, switch_height=22)
             checkbox.grid(row=i + 1, column=0, padx=10, pady=(10, 0), sticky="wesn")
             self.checkboxes.append(checkbox)
@@ -125,11 +128,16 @@ class MyTgBotFtame(customtkinter.CTkFrame):
         self.leftFr.columnconfigure(1, weight=1)
         self.rightFg = customtkinter.CTkFrame(self)
         self.checkbox = MyCheckFrame(self.leftFr,
-                                     values=['АГЛ', 'Кровь', 'Призрачка', 'Анталон', 'Гроза над морем',
-                                             'Новый день', 'Вексели', 'Даскшир', 'Гартрейн', 'Око бури', 'Мечи', 'Эфен',
+                                     values=['АГЛ(JMG)', 'Кровь', 'Призрачка',
+                                             'Анталон',
+                                             'Новый день', 'Лицензии', 'Вексели', 'Порт-Аргенто', 'Библиотека',
+                                             'Дейлики',
+                                             'Даскшир', 'Гартрейн', 'Мечи: Запад', 'Мечи: Восток', 'Эфен',
                                              'Бухта',
-                                             'Паки', 'Аук',
-                                             'Мирка', 'Друг', 'Кирка', 'Осада', 'Ксанатос', 'Дельфиец', 'Кракен',
+                                             'Паки', 'Аукцион', 'Друг онлайн', 'Кирка',
+                                             'Мирка-север', 'Спруты', 'Око бури', 'Осада', 'Ксанатос',
+                                             'Дельфиец',
+                                             'Кракен',
                                              'Левиафан'])
 
         self.checkbox.grid(row=0, column=0, sticky='nsew')
@@ -158,6 +166,7 @@ class MyTgBotFtame(customtkinter.CTkFrame):
         u = ctypes.windll.LoadLibrary("user32.dll")
         pf = getattr(u, "GetKeyboardLayout")
         return hex(pf(0)) == '0x4190419'
+
     def keysMy(self, event):
         if self.is_ru_lang_keyboard():
             if event.keycode == 86:
@@ -515,8 +524,10 @@ class MyMenuFrame(customtkinter.CTkFrame):
                 with open(fr"{PATH_DOCU}\ArcheRage\Chat.log", 'r',
                           encoding='utf-8') as chatLog:
                     ff = chatLog.readlines()
+
                     try:
                         for i in ff:
+                            g = i.split(']: ')
                             if self.radio.get() != 'Now':
                                 while True:
                                     if self.radio.get() == 'Now':
@@ -528,15 +539,15 @@ class MyMenuFrame(customtkinter.CTkFrame):
                             time.sleep(0.3)
                             if self.radio.get() == 'Now':
 
-                                x = translator.translate(i, src='zh-cn', dest='ru').text + '\n'
-                                textbox.insert(customtkinter.END, x)
-                                self.text_bar += x
+                                x = translator.translate(g[1], dest='ru').text + '\n'
+                                textbox.insert(customtkinter.END, (g[0] + ']: ' + x))
+                                self.text_bar += (g[0] + ']: ' + x)
                             else:
                                 while self.radio.get() != 'Now':
                                     time.sleep(0.15)
-                                x = translator.translate(i, src='zh-cn', dest='ru').text + '\n'
-                                textbox.insert(customtkinter.END, x)
-                                self.text_bar += x
+                                x = translator.translate(g[1], dest='ru').text + '\n'
+                                textbox.insert(customtkinter.END, (g[0] + ']: ' + x))
+                                self.text_bar += (g[0] + ']: ' + x)
                         f = open(fr'{PATH_DOCU}\ArcheRage\Chat.log', 'w',
                                  encoding='utf-8')
                         f.close()
@@ -673,7 +684,7 @@ class App(customtkinter.CTk):
         self.menuFrame = MyMenuFrame(self)
         self.menuFrame.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
 
-    def center_window(self,width=1030, height=680):
+    def center_window(self, width=1030, height=680):
         # get screen width and height
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
@@ -683,6 +694,7 @@ class App(customtkinter.CTk):
         y = (screen_height / 2) - (height / 2)
         self.title("ArchUt")
         self.geometry('%dx%d+%d+%d' % (width, height, x, y))
+
     def ifclosed(self, progOn):
         if not progOn:
             self.menuFrame.ProgaOn = progOn

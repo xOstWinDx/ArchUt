@@ -23,7 +23,6 @@ if dll.SHGetSpecialFolderPathW(None, buf, 0x0005, False):
 else:
     logging.error("Не удалось получить доки (тгбот)")
 
-
 logging.basicConfig(level=logging.INFO, filename="loggs\\ArchUt.log", filemode="a",
                     format="%(asctime)s %(levelname)s %(message)s")
 
@@ -95,8 +94,9 @@ class MyNotifi:
                     DoneDay.append(call.data)
                     # self.bot.send_message(self.CHAT_ID,f'{call.data} - Выполненно')
                     self.bot.edit_message_text(chat_id=self.CHAT_ID, message_id=call.message.id,
-                                               text=f'{call.data} - Выполненно')
-
+                                               text=f'{call.data} - Выполнено')
+                else:
+                    self.bot.delete_message(chat_id=self.CHAT_ID, message_id=call.message.id)
 
     def clearDone(self):
         global DoneDay
@@ -123,7 +123,7 @@ class MyNotifi:
                 fff = file.read().lstrip()
                 save = json.loads(fff)
                 if name in save and name not in DoneDay:
-                    if name == 'Аук':
+                    if name == 'Аукцион':
                         self.bot.send_message(CHAT_ID, f"\U0001F4B0 {inf[11:].replace('|,', '').replace(';', '')}")
                     elif name == 'Паки':
                         now = datetime.datetime.now()
@@ -133,20 +133,25 @@ class MyNotifi:
                                               f'\U0001F4E9 Выручка от продажи паков будет выслана вам по почте в {current_time} по МСК')
                     elif name == 'Мирка':
                         self.bot.send_message(CHAT_ID, f'\U000026F5 Началась мирка на сверкашке, можно повозить :3')
-                    elif name == 'Друг':
+                    elif name == 'Друг онлайн':
                         self.bot.send_message(CHAT_ID, f'\U0001F575 {inf[11:]}')
                     elif name == 'Вексели':
-                        markup = types.InlineKeyboardMarkup(row_width=1)
+                        markup = types.InlineKeyboardMarkup(row_width=2)
                         done = types.InlineKeyboardButton('|Выполнено:\U00002705|', callback_data=name)
-                        markup.add(done)
-                        self.bot.send_message(CHAT_ID, f'\U0001F331 Не забудь сделать вексели :)', reply_markup=markup)
+                        discord = types.InlineKeyboardButton("Дискорд", url='https://discord.gg/2Mqr9GTCGd')
+                        markup.add(done, discord)
+
+                        self.bot.send_message(CHAT_ID, f'\U0001F331 Не забудь сделать вексели\n'
+                                                       f'узнать их ты можешь в дискорде по ссылке',
+                                              reply_markup=markup)
                     elif name == 'Кирка':
                         self.bot.send_message(CHAT_ID, '\U000026CF У тебя откатилась новенькая кирка :D')
                     elif name == 'Новый день':
-                        self.bot.send_message(CHAT_ID, '\U0001F55B Скоро рейд на новый день, успей вступить!')
+                        self.bot.send_message(CHAT_ID, '\U0001F313 Скоро рейд на новый день\n успей вступить!')
                     elif name == 'Даскшир':
-                        self.bot.send_message(CHAT_ID, f'\U0001F6E1 Через 10 минут начнётся: {name}, не пропусти!')
-                    elif name == 'Гроза над морем' or name == 'Око бури':
+                        self.bot.send_message(CHAT_ID, f'\U0001F6E1 Через 10 минут начнётся: {name}\n'
+                                                       f' Только не стой афк)')
+                    elif name == 'Спруты' or name == 'Око бури':
                         self.bot.send_message(CHAT_ID, f'\U0001F419 Через 10 минут начнётся: {name}, не пропусти!')
                     elif name == 'Кракен' or name == 'Левиафан':
                         self.bot.send_message(CHAT_ID, f'\U0001F419 Через 30 минут начнётся: {name}, не пропусти!')
@@ -156,13 +161,113 @@ class MyNotifi:
                         self.bot.send_message(CHAT_ID, f'\U0001F432 Через 30 минут начнётся: {name}, не пропусти!')
                     elif name == 'Осада':
                         self.bot.send_message(CHAT_ID, f'\U0001F3AAЧерез 30 минут начнётся: {name}, не пропусти!')
+
+                    elif name == 'Лицензии':
+                        markup = types.InlineKeyboardMarkup(row_width=1)
+                        done = types.InlineKeyboardButton('|Выполнено:\U00002705|', callback_data=name)
+                        markup.add(done)
+                        self.bot.send_message(CHAT_ID,
+                                              "\U0001F4DC Не забудь выполнить лицензии!\n"
+                                              "  Кладбище драконов - 5шт\n"
+                                              "  Полуостров падающих звезд - 2шт\n"
+                                              "  Золотые равнины - 2шт\n"
+                                              "  Заболоченные низины - 3шт\n"
+                                              "  Долгая коса - 2шт\n"
+                                              "  Инистра - 1шт\n"
+                                              "  Рокочущие перевалы - 2шт\n"
+                                              "  Саванна - 5шт\n"
+                                              "  Руины Харихараллы - 1шт\n"
+                                              "  Хазира - 6шт", reply_markup=markup)
+                    elif name == 'Порт-Аргенто':
+                        markup = types.InlineKeyboardMarkup(row_width=1)
+                        done = types.InlineKeyboardButton('|Выполнено:\U00002705|', callback_data=name)
+                        markup.add(done)
+                        self.bot.send_message(CHAT_ID,
+                                              f'\U0001F30A Не забудь сходить в {name}, бижутерия сама себя не сделает!',
+                                              reply_markup=markup)
+
+                    elif name == 'Библиотека':
+                        markup = types.InlineKeyboardMarkup(row_width=1)
+                        done = types.InlineKeyboardButton('|Выполнено:\U00002705|', callback_data=name)
+                        markup.add(done)
+                        self.bot.send_message(CHAT_ID,
+                                              f'\U0001F4DA Не забудь сходить в {name}, булава сама себя не выбьет!',
+                                              reply_markup=markup)
+                    elif name == "Дейлики":
+                        markup = types.InlineKeyboardMarkup(row_width=1)
+                        done = types.InlineKeyboardButton('|Выполнено:\U00002705|', callback_data=name)
+                        markup.add(done)
+                        self.bot.send_message(CHAT_ID,
+                                              f"\U0001F55B Не забудь сделать дейлики!\n"
+                                              "  Сокрытая долина: Зимний очаг\n"
+                                              "  Сокрытая долина: Укромный утес\n"
+                                              "  Колыбель мира: Сад матери\n"
+                                              "  Ифнир: Каменные крылья", reply_markup=markup)
+                    elif name == 'Мечи: Запад':
+                        markup = types.InlineKeyboardMarkup(row_width=1)
+                        done = types.InlineKeyboardButton('|Выполнено:\U00002705|', callback_data=name)
+                        markup.add(done)
+                        self.bot.send_message(CHAT_ID,
+                                              f'\U00002694 Через 10 минут начнутся: {name}, не пропусти!\n'
+                                              '  ППЗ: Рег.Община - кв у НПС, слева от входа в рег.общ.\n',
+                                              reply_markup=markup)
+                    elif name == 'Мечи: Восток':
+                        markup = types.InlineKeyboardMarkup(row_width=1)
+                        done = types.InlineKeyboardButton('|Выполнено:\U00002705|', callback_data=name)
+                        markup.add(done)
+                        self.bot.send_message(CHAT_ID,
+                                              f'\U00002694 Через 10 минут начнутся: {name}, не пропусти!\n'
+                                              '  Инистра: Рег.Община - кв у НПС, слева от входа в рег.общ.\n',
+                                              reply_markup=markup)
+                    elif name == "Эфен":
+                        markup = types.InlineKeyboardMarkup(row_width=1)
+                        done = types.InlineKeyboardButton('|Выполнено:\U00002705|', callback_data=name)
+                        markup.add(done)
+                        self.bot.send_message(CHAT_ID,
+                                              f"\U00002694 Через 10 минут начнётся: {name}, не пропусти!\n"
+                                              "  Эфен'Хал: Форпост Щ.И.Т.а - кв у НПС\n"
+                                              "  Эфен'Хал: Форпост вашей фракции - Мобы",
+                                              reply_markup=markup)
                     else:
                         if self.zagl:
                             markup = types.InlineKeyboardMarkup(row_width=1)
                             done = types.InlineKeyboardButton('|Выполнено:\U00002705|', callback_data=name)
                             markup.add(done)
-                            self.bot.send_message(CHAT_ID, f'\U00002694 Через 10 минут начнётся: {name}, не пропусти!',
-                                                  reply_markup=markup)
+                            if name == 'АГЛ(JMG)':
+                                self.bot.send_message(CHAT_ID,
+                                                      f'\U00002694 Через 10 минут начнётся: {name}, не пропусти!\n'
+                                                      '  Бездна: Нагашар - Ашъяра\n'
+                                                      '  Солнечные поля - Глен, Лорея\n'
+                                                      ' !Квест выдаётся при агре босса!',
+                                                      reply_markup=markup)
+                            elif name == 'Призрачка':
+                                self.bot.send_message(CHAT_ID,
+                                                      f'\U0001F47B Через 10 минут начнётся: {name}, не пропусти!\n'
+                                                      '  Запад:\n'
+                                                      '     ППЗ: Рег.Община - Кв на табличке\n'
+                                                      '     ППЗ: Застава - НПС для сдачи\n'
+                                                      '  Восток:\n'
+                                                      '     Инистра: Каор-Норд - Кв на табличке\n'
+                                                      '     Инистра: Ривергард - НПС для сдачи',
+                                                      reply_markup=markup)
+                            elif name == 'Кровь':
+                                self.bot.send_message(CHAT_ID,
+                                                      f'\U0001FA78 Через 10 минут начнётся: {name}, не пропусти!\n'
+                                                      '  Запад:\n'
+                                                      '     ППЗ: Рег.Община - Кв на выходе у НПС\n'
+                                                      '  Восток:\n'
+                                                      '     Инистра: Рег.Община - Кв на выходе у НПС',
+                                                      reply_markup=markup)
+                            elif name == 'Анталон':
+                                self.bot.send_message(CHAT_ID,
+                                                      f'\U0001F52E Через 10 минут начнётся: {name}, не пропусти!\n'
+                                                      '  Солнечные поля - Кв дают при агре босса!\n'
+                                                      '  p.s на месте тп можно взять квесты на кровь!',
+                                                      reply_markup=markup)
+                            else:
+                                self.bot.send_message(CHAT_ID,
+                                                      f'\U00002694 Через 10 минут начнётся: {name}, не пропусти!',
+                                                      reply_markup=markup)
                             self.zagl = False
                             threading.Timer(500, zag).start()
                             logging.info(f'Поставил заглушку {self.zagl}')
@@ -186,8 +291,8 @@ class MyNotifi:
         while True:
             self.tm += datetime.timedelta(0, 6)
             if datetime.timedelta(hours=4, minutes=50) < self.tm < datetime.timedelta(hours=5, minutes=10):
-                self.SendNotify("АГЛ")
-                logging.info(f'АГЛ {self.tm} {self.zagl}')
+                self.SendNotify("АГЛ(JMG)")
+                logging.info(f'АГЛ(JMG) {self.tm} {self.zagl}')
 
             if datetime.timedelta(hours=10, minutes=50) < self.tm < datetime.timedelta(hours=11, minutes=10):
                 self.SendNotify("Кровь")
@@ -205,16 +310,13 @@ class MyNotifi:
     def DoNotifyRealTime(self):
         schedule.every().day.at("00:00", timezone("Europe/Moscow")).do(self.clearDone)
 
-        schedule.every().day.at("12:20", timezone("Europe/Moscow")).do(self.SendNotify, 'Гроза над морем')
-        schedule.every().day.at("21:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Гроза над морем')
+        schedule.every().day.at("12:20", timezone("Europe/Moscow")).do(self.SendNotify, 'Спруты')
+        schedule.every().day.at("21:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Спруты')
 
         schedule.every().day.at("23:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Новый день')
 
         schedule.every().day.at("10:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Даскшир')
         schedule.every().day.at("20:20", timezone("Europe/Moscow")).do(self.SendNotify, 'Дискшир')
-
-        schedule.every().day.at("03:00", timezone("Europe/Moscow")).do(self.SendNotify, 'Вексели')
-        schedule.every().day.at("23:00", timezone("Europe/Moscow")).do(self.SendNotify, 'Вексели')
 
         schedule.every().sunday.at("10:20", timezone("Europe/Moscow")).do(self.SendNotify, 'Гартрейн')
         schedule.every().sunday.at("19:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Гартрейн')
@@ -245,8 +347,14 @@ class MyNotifi:
         schedule.every().thursday.at("20:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Око бури')
         schedule.every().saturday.at("20:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Око бури')
 
-        # schedule.every().day.at("03:00", timezone("Europe/Moscow")).do(self.SendNotify, 'Вексели')
+        schedule.every(3).hours.do(self.SendNotify, 'Лицензии')
+        schedule.every(5).hours.do(self.SendNotify, 'Вексели')
+        schedule.every(4).hours.do(self.SendNotify, 'Дейлики')
 
+        # schedule.every(3).seconds.do(self.SendNotify, 'Дейлики')
+        # schedule.every(7).seconds.do(self.SendNotify, 'Лицензии')
+
+        # schedule.every().day.at("03:00", timezone("Europe/Moscow")).do(self.SendNotify, 'Вексели')
 
         while True:
             schedule.run_pending()
@@ -265,7 +373,10 @@ class MyNotifi:
                     logs = mis.readlines()
                     for i in logs:
                         if "области «Полуостров Падающих Звезд» назрел конфликт." in i:
-                            self.SendNotify('Мечи')
+                            self.SendNotify('Мечи: Запад')
+                            logs.remove(i)
+                        if 'области «Инистра» назрел конфликт' in i:
+                            self.SendNotify('Мечи: Восток')
                             logs.remove(i)
                         if "области «Эфен'Хал» назрел конфликт." in i:
                             self.SendNotify('Эфен')
