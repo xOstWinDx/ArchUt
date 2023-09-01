@@ -21,7 +21,7 @@ Documentation Here
 
 ## Distribute
 
-- [Я.Диск](Page Link)
+- [Я.Диск](https://disk.yandex.ru/d/0cktq-rn5Qn1eQ)
 
 
 ## Developers
