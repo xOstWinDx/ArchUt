@@ -1,5 +1,5 @@
 <p align="center">
-      <img src="[Project Logo Url](https://ibb.co/BLZHdBh)" width="726">
+      <img src="https://ibb.co/BLZHdBh", alt='Project Logo' width="726">
 </p>
 
 
