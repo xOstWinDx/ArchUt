@@ -131,7 +131,7 @@ class MyNotifi:
                         current_time = now.strftime("%H:%M")
                         self.bot.send_message(CHAT_ID,
                                               f'\U0001F4E9 Выручка от продажи паков будет выслана вам по почте в {current_time} по МСК')
-                    elif name == 'Мирка':
+                    elif name == 'Мирка-Cевер':
                         self.bot.send_message(CHAT_ID, f'\U000026F5 Началась мирка на сверкашке, можно повозить :3')
                     elif name == 'Друг онлайн':
                         self.bot.send_message(CHAT_ID, f'\U0001F575 {inf[11:]}')
@@ -397,7 +397,7 @@ class MyNotifi:
                             self.SendNotify('Аук', i)
                             logs.remove(i)
                         if "Война в области «Сверкающее побережье» завершена." in i:
-                            self.SendNotify('Мирка', i)
+                            self.SendNotify('Мирка-Cевер', i)
                             logs.remove(i)
                         if 'входит в игру.' in i:
                             self.SendNotify('Друг', i)
