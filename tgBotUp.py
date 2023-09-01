@@ -17,11 +17,11 @@ from ctypes.wintypes import MAX_PATH
 
 dll = ctypes.windll.shell32
 buf = ctypes.create_unicode_buffer(MAX_PATH + 1)
-PATH_DOCU = f'C:\\Users\\{getpass.getuser()}\\Documents'
+PATH_DOCU = fr'C:\Users\{getpass.getuser()}\Documents'
 if dll.SHGetSpecialFolderPathW(None, buf, 0x0005, False):
     PATH_DOCU = buf.value
 else:
-    print("Failure!")
+    logging.error("Не удалось получить доки (тгбот)")
 
 
 logging.basicConfig(level=logging.INFO, filename="loggs\\ArchUt.log", filemode="a",
@@ -260,7 +260,7 @@ class MyNotifi:
         pakTh = threading.Timer(120, self.SendNotify, ['Паки', 'Gg'])
         while True:
             try:
-                with open(f"{PATH_DOCU}\\ArcheRage\\Misc.log", "r",
+                with open(fr"{PATH_DOCU}\ArcheRage\Misc.log", "r",
                           encoding='utf-8') as mis:
                     logs = mis.readlines()
                     for i in logs:
@@ -296,7 +296,7 @@ class MyNotifi:
                             logging.info("Кирку нашёл")
                             threading.Timer(10800, self.SendNotify, args=[s]).start()
                             logs.remove(i)
-                f = open(f"{PATH_DOCU}\\ArcheRage\\Misc.log", "w", encoding="utf-8")
+                f = open(fr"{PATH_DOCU}\ArcheRage\Misc.log", "w", encoding="utf-8")
                 f.writelines(logs)
                 f.close()
                 time.sleep(2)

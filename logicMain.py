@@ -16,15 +16,14 @@ class AnalyseLogAndDoGraph:
 
     @staticmethod
     def DoHealAndDamage(name: str):
-        if not os.path.exists(f'Archive\\Combat\\{name}\\Damage_{name}.txt') and not os.path.exists(
-                f'Archive\\Combat\\{name}\\Heal_{name}.txt'):
+        if not os.path.exists(fr'Archive\Combat\{name}\Damage_{name}.txt') and not os.path.exists(
+                fr'Archive\Combat\{name}\Heal_{name}.txt'):
             try:
-                with open(f"Archive\\Combat\\{name}\\Комбо_{name}_Рейд.log", "r", encoding='utf-8') as file:
+                with open(fr"Archive\Combat\{name}\Комбо_{name}_Рейд.log", "r", encoding='utf-8') as file:
                     hill_dict = dict()
                     damage_dict = dict()
                     tank_dict = dict()
                     wewe = file.readlines()
-                    print(wewe)
                     for i in wewe:
                         if 'восстанавливает' in i and 'маны' not in i:
                             if i[20:i.index('|r')] not in hill_dict:

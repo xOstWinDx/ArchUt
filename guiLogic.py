@@ -5,7 +5,6 @@ import getpass
 import os
 import sys
 import time
-import tkinter
 
 import telebot
 import telebot.apihelper
@@ -22,11 +21,11 @@ from ctypes.wintypes import MAX_PATH
 
 dll = ctypes.windll.shell32
 buf = ctypes.create_unicode_buffer(MAX_PATH + 1)
-PATH_DOCU = f'C:\\Users\\{getpass.getuser()}\\Documents'
+PATH_DOCU = fr'C:Users\{getpass.getuser()}\Documents'
 if dll.SHGetSpecialFolderPathW(None, buf, 0x0005, False):
     PATH_DOCU = buf.value
 else:
-    print("Failure!")
+    logging.error('Не удалось узнать путь Доков, беруться дефолтные')
 
 customtkinter.set_appearance_mode("dark")
 
@@ -49,17 +48,17 @@ class getSpisok():
     def getSpisok():
         global Id_Dir
         try:
-            with open('Archive\\IdDir.txt', 'r', encoding='utf-8') as idfd:
+            with open(r'Archive\IdDir.txt', 'r', encoding='utf-8') as idfd:
                 xx = idfd.read().strip()
                 Id_Dir = json.loads(xx)
         except:
             pass
         if not os.path.exists('Archive'):
             os.mkdir('Archive')
-        if not os.path.exists('Archive\\Combat'):
-            os.mkdir('Archive\\Combat')
-        with open('Archive\\IdDir.txt', 'w', encoding='utf-8') as idfd:
-            xx = os.listdir('Archive/Combat')
+        if not os.path.exists(r'Archive\Combat'):
+            os.mkdir(r'Archive\Combat')
+        with open(r'Archive\IdDir.txt', 'w', encoding='utf-8') as idfd:
+            xx = os.listdir('Archive\Combat')
             for i in xx:
                 if i.strip() not in Id_Dir and i.strip() != '':
                     Id_Dir[i.strip()] = i.strip()
@@ -95,9 +94,9 @@ class MyCheckFrame(customtkinter.CTkScrollableFrame):
         return checked_checkboxes
 
     def tuk(self):
-        if not os.path.exists('Archive\\Tg_Bot'):
-            os.mkdir('Archive\\Tg_Bot')
-        fff = open('Archive\\Tg_Bot\\Save.txt', 'w')
+        if not os.path.exists(r'Archive\Tg_Bot'):
+            os.mkdir(r'Archive\Tg_Bot')
+        fff = open(r'Archive\Tg_Bot\Save.txt', 'w')
         x = self.get()
         json.dump(x, fff)
 
@@ -504,7 +503,7 @@ class MyMenuFrame(customtkinter.CTkFrame):
 
         else:
             self.textbox.delete("1.0", "end")
-            x = open(f"Archive\\ChatBack\\{name}", 'r', encoding='utf-8')
+            x = open(fr"Archive\ChatBack\{name}", 'r', encoding='utf-8')
             self.textbox.insert("0.0", x.read())
 
     def StartLogTrans(self, textbox: customtkinter.CTkTextbox):
@@ -513,7 +512,7 @@ class MyMenuFrame(customtkinter.CTkFrame):
             translator = Translator()
             translator.raise_Exception = True
             while self.activWind == 'Trans' and self.ProgaOn:
-                with open(f"{PATH_DOCU}\\ArcheRage\\Chat.log", 'r',
+                with open(fr"{PATH_DOCU}\ArcheRage\Chat.log", 'r',
                           encoding='utf-8') as chatLog:
                     ff = chatLog.readlines()
                     try:
@@ -538,7 +537,7 @@ class MyMenuFrame(customtkinter.CTkFrame):
                                 x = translator.translate(i, src='zh-cn', dest='ru').text + '\n'
                                 textbox.insert(customtkinter.END, x)
                                 self.text_bar += x
-                        f = open(f'{PATH_DOCU}\\ArcheRage\\Chat.log', 'w',
+                        f = open(fr'{PATH_DOCU}\ArcheRage\Chat.log', 'w',
                                  encoding='utf-8')
                         f.close()
 
@@ -621,7 +620,7 @@ class MyMainWindowFrame(customtkinter.CTkFrame):
             name = self.checkbox.get().rstrip()
             Id_Dir[name] = x
             print(Id_Dir)
-            with open('Archive\\IdDir.txt', 'w', encoding='utf-8') as idfd:
+            with open(r'Archive\IdDir.txt', 'w', encoding='utf-8') as idfd:
                 json.dump(Id_Dir, idfd)
             self.comandUpd(self.title.strip())
 
@@ -635,12 +634,12 @@ class MyMainWindowFrame(customtkinter.CTkFrame):
                     os.remove(f'Archive/Combat/{name}/{i}')
                 os.rmdir(f'Archive/Combat/{name}')
             Id_Dir = {}
-            os.remove('Archive\\IdDir.txt')
+            os.remove(r'Archive\IdDir.txt')
             self.comandUpd(self.title.strip())
 
         except FileNotFoundError as f:
             logging.error('Файла для удаления нет', exc_info=True)
-            os.remove('Archive\\IdDir.txt')
+            os.remove(r'Archive\IdDir.txt')
             self.comandUpd(self.title.strip())
         except Exception as f:
             print(f)
@@ -707,9 +706,9 @@ class App(customtkinter.CTk):
         if len(self.menuFrame.text_bar) > 0:
             now = datetime.datetime.now()
             name = now.strftime("%d %b %Hч %Mм %Sс")
-            x = open(f'Archive\\ChatBack\\[{name}]', 'w', encoding='utf-8')
+            x = open(fr'Archive\ChatBack\[{name}]', 'w', encoding='utf-8')
             x.write(self.menuFrame.text_bar)
-            x1 = open(f"{PATH_DOCU}\\ArcheRage\\Chat.log", 'w')
+            x1 = open(fr"{PATH_DOCU}\ArcheRage\Chat.log", 'w')
             x1.close()
 
     def rrrr(self):

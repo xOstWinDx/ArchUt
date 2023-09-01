@@ -23,9 +23,10 @@ from ctypes.wintypes import MAX_PATH
 dll = ctypes.windll.shell32
 buf = ctypes.create_unicode_buffer(MAX_PATH + 1)
 
-PATH_DOCU = f'C:\\Users\\{getpass.getuser()}\\Documents'
+PATH_DOCU = fr'C:\Users\{getpass.getuser()}\Documents'
 if dll.SHGetSpecialFolderPathW(None, buf, 0x0005, False):
     PATH_DOCU = buf.value
+    print(PATH_DOCU)
 else:
     print("Failure!")
 
@@ -40,7 +41,7 @@ ctypes.windll.shcore.SetProcessDpiAwareness(2)
 
 locale.setlocale(locale.LC_TIME, ('ru_RU', 'UTF-8'))
 locale.setlocale(locale.LC_CTYPE, ('ru_RU', 'UTF-8'))
-logging.basicConfig(level=logging.INFO, filename="loggs\\ArchUt_log.log", filemode="w",
+logging.basicConfig(level=logging.INFO, filename=r"loggs\ArchUt_log.log", filemode="w",
                     format="%(asctime)s %(levelname)s %(message)s")
 logging.info('Начало лога')
 
@@ -62,9 +63,8 @@ def window():
     try:
 
         app = guiLogic.App()
-        print(app.winfo_screenwidth())
         # app.attributes("-topmost", True)
-        app.iconbitmap(default="Source\\logo.ico")
+        app.iconbitmap(default=r"Source\logo.ico")
 
         app.wm_protocol("WM_DELETE_WINDOW",
                         lambda: (app.withdraw(), app.rrrr()))
@@ -89,7 +89,7 @@ def on_clicked():
 def DetectedRaidIn():
     global PATH_DOCU
     try:
-        os.remove(f"{PATH_DOCU}\\ArcheRage\\combat.log")
+        os.remove(fr"{PATH_DOCU}\ArcheRage\combat.log")
     except FileNotFoundError:
         logging.error('Нет файла для удаления', exc_info=True)
 
@@ -116,22 +116,24 @@ def close(prog: pystray.Icon):
 
 
 def outR():
+    global PATH_DOCU
     global inRaid
     inRaid = False
-    if os.path.exists(f"{PATH_DOCU}\\ArcheRage\\combat.log"):
+    if os.path.exists(fr"{PATH_DOCU}\ArcheRage\combat.log"):
+        logging.info("Перемещаю комбат в "+fr"{PATH_DOCU}\ArcheRage\combat.log")
         if not os.path.exists('Archive'):
             os.mkdir('Archive')
-        if not os.path.exists('Archive\\Combat'):
-            os.mkdir('Archive\\Combat')
+        if not os.path.exists(r'Archive\Combat'):
+            os.mkdir(r'Archive\Combat')
         logging.info("Закончилось отслеживание")
         now = datetime.now()
         logging.info(now)
         current_time = now.strftime("%d %b %Hч %Mм %Sс")
         name = '[' + str(current_time) + ']'
-        os.mkdir(f'Archive\\Combat\\{name}')
+        os.mkdir(fr'Archive\Combat\{name}')
         print(name)
-        os.replace(f"{PATH_DOCU}\\ArcheRage\\combat.log",
-                   f"Archive\\Combat\\{name}\\Комбо_{name}_Рейд.log")
+        os.replace(fr"{PATH_DOCU}\ArcheRage\combat.log",
+                   fr"Archive\Combat\{name}\Комбо_{name}_Рейд.log")
 
 
     else:
@@ -139,8 +141,8 @@ def outR():
 
 
 def logListenner():
-    global inRaid, gameON, ProgaOn
-    ttt = open(f'{PATH_DOCU}\\ArcheRage\\Misc.log', 'w', encoding="utf-8")
+    global inRaid, gameON, ProgaOn,PATH_DOCU
+    ttt = open(fr'{PATH_DOCU}\ArcheRage\Misc.log', 'w', encoding="utf-8")
     ttt.close()
     while ProgaOn:
         time.sleep(2)
@@ -152,7 +154,7 @@ def logListenner():
 
             time.sleep(2)
             try:
-                with open(f"{PATH_DOCU}\\ArcheRage\\Misc.log", "r",
+                with open(fr"{PATH_DOCU}\ArcheRage\Misc.log", "r",
                           encoding='utf-8') as file:
                     logMisc = file.readlines()
                     for i in logMisc:
@@ -162,7 +164,7 @@ def logListenner():
                         if 'Вы покинули отряд' in i or 'расформирован.' in i or 'Вы покинули рейд.' in i and inRaid:
                             outR()
                             logMisc.remove(i)
-                f = open(f"{PATH_DOCU}\\ArcheRage\\Misc.log", "w", encoding="utf-8")
+                f = open(fr"{PATH_DOCU}\ArcheRage\Misc.log", "w", encoding="utf-8")
                 f.writelines(logMisc)
                 f.close()
             except Exception as d:
