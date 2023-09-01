@@ -24,20 +24,25 @@ class AnalyseLogAndDoGraph:
                     damage_dict = dict()
                     tank_dict = dict()
                     wewe = file.readlines()
+
                     for i in wewe:
+                        d = i
                         if 'восстанавливает' in i and 'маны' not in i:
                             if i[20:i.index('|r')] not in hill_dict:
                                 hill_dict[i[20:i.index('|r')]] = 0
                             hill_dict[i[20:i.index('|r')]] += int(i[i.index('cff00ff00') + 9:-17])
                         if 'снижается на' in i:
                             if 'Поглощено' in i:
-                                i = i[:i.rindex('|r') + 7]
-                                if i.find('cffff0000-') == -1:
+                                d = i[:i.rindex('|r') + 7]
+                                if d.find('cffff0000-') == -1:
+                                    print(i)
                                     pass
-                            if i[20:i.index('|r')] not in damage_dict:
-                                damage_dict[i[20:i.index('|r')]] = 0
-                            damage_dict[i[20:i.index('|r')]] += int(i[i.index('cffff0000-') + 10:-7])
-                            z = i.split('cffff0000')
+                            else:
+                                if d[20:d.index('|r')] not in damage_dict:
+
+                                    damage_dict[d[20:d.index('|r')]] = 0
+                                damage_dict[d[20:d.index('|r')]] += int(d[d.index('cffff0000-') + 10:-7])
+                                z = i.split('cffff0000')
 
                             if 'Поглощено' in i:
                                 if 'блокирует' in i:

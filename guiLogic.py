@@ -527,6 +527,8 @@ class MyMenuFrame(customtkinter.CTkFrame):
 
                     try:
                         for i in ff:
+                            if 'BackupNameAttachment' in i:
+                                continue
                             g = i.split(']: ')
                             if self.radio.get() != 'Now':
                                 while True:
@@ -556,6 +558,7 @@ class MyMenuFrame(customtkinter.CTkFrame):
                         self.text_bar = ""
                     except Exception as x:
                         logging.error('Ошибка в переводчике', exc_info=True)
+                        continue
         except Exception as e:
             logging.error('Ошибка в переводчике', exc_info=True)
 
@@ -650,10 +653,13 @@ class MyMainWindowFrame(customtkinter.CTkFrame):
 
         except FileNotFoundError as f:
             logging.error('Файла для удаления нет', exc_info=True)
+            Id_Dir = {}
             os.remove(r'Archive\IdDir.txt')
             self.comandUpd(self.title.strip())
         except Exception as f:
-            print(f)
+            Id_Dir = {}
+            os.remove(r'Archive\IdDir.txt')
+            self.comandUpd(self.title.strip())
 
     def showGraph(self, type, pathD, pathH, pathT):
         try:

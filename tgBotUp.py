@@ -228,6 +228,15 @@ class MyNotifi:
                                               "  Эфен'Хал: Форпост Щ.И.Т.а - кв у НПС\n"
                                               "  Эфен'Хал: Форпост вашей фракции - Мобы",
                                               reply_markup=markup)
+                    elif name == "Бухта":
+                        markup = types.InlineKeyboardMarkup(row_width=1)
+                        done = types.InlineKeyboardButton('|Выполнено:\U00002705|', callback_data=name)
+                        markup.add(done)
+                        self.bot.send_message(CHAT_ID,
+                                              f"\U00002694 Через 10 минут начнётся: {name}, не пропусти!\n"
+                                              "  Бухта китобоев: Форпост Щ.И.Т.а - кв у НПС\n"
+                                              "  Бухта китобоев: Форпост вашей фракции - Мобы",
+                                              reply_markup=markup)
                     else:
                         if self.zagl:
                             markup = types.InlineKeyboardMarkup(row_width=1)
@@ -350,6 +359,8 @@ class MyNotifi:
         schedule.every(3).hours.do(self.SendNotify, 'Лицензии')
         schedule.every(5).hours.do(self.SendNotify, 'Вексели')
         schedule.every(4).hours.do(self.SendNotify, 'Дейлики')
+        schedule.every(150).minutes.do(self.SendNotify, 'Библиотека')
+        schedule.every(150).minutes.do(self.SendNotify, 'Порт-Аргенто')
 
         # schedule.every(3).seconds.do(self.SendNotify, 'Дейлики')
         # schedule.every(7).seconds.do(self.SendNotify, 'Лицензии')
