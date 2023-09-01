@@ -21,11 +21,14 @@ Documentation Here
 
 ## Distribute
 
-- [Service Name](Page Link)
+- [Я.Диск](Page Link)
 
 
 ## Developers
 
-- [Alexey: ](https://github.com/xOstWinDx)https://github.com/xOstWinDx)
+- [Alexey](https://github.com/xOstWinDx)
 
 ## License
+- The MIT License (MIT)
+
+Copyright © 2023 Starobogatov.A
