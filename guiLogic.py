@@ -65,9 +65,10 @@ class getSpisok():
                     Id_Dir[i.strip()] = i.strip()
             json.dump(Id_Dir, idfd)
         for i in Id_Dir.keys():
-            print(i)
+
             logicMain.AnalyseLogAndDoGraph.DoHealAndDamage(Id_Dir[i])
         idfd.close()
+
         return [Id_Dir.keys(), Id_Dir.values()] if len(Id_Dir) > 0 else [['Нет записей'], ['Нет записей']]
 
 
@@ -578,10 +579,11 @@ class MyRadiobuttonFrame(customtkinter.CTkScrollableFrame, ):
     def ceaftRadio(self, valueVnK):
         self.variable.set('')
         if len(self.spisokradio) == 0:
-            for i, value, text in zip([i for i in range(len(valueVnK))], valueVnK[0], valueVnK[1]):
+            for i, value, text in zip([i for i in range(len(valueVnK[0]))], valueVnK[0], valueVnK[1]):
                 self.spisokradio[i] = customtkinter.CTkRadioButton(self, text=text, value=value,
                                                                    variable=self.variable,
                                                                    command=self.printbt)
+
                 self.spisokradio[i].grid(row=i + 1, column=0, padx=10, pady=(10, 0), sticky="w")
         else:
             if len(self.spisokradio) > 0:
@@ -589,7 +591,7 @@ class MyRadiobuttonFrame(customtkinter.CTkScrollableFrame, ):
                     self.spisokradio[i].grid_forget()
                     self.spisokradio[i].destroy()
                 self.spisokradio = dict()
-            for i, value, text in zip([i for i in range(len(valueVnK))], valueVnK[0], valueVnK[1]):
+            for i, value, text in zip([i for i in range(len(valueVnK[0]))], valueVnK[0], valueVnK[1]):
                 self.spisokradio[i] = customtkinter.CTkRadioButton(self, text=text, value=value,
                                                                    variable=self.variable,
                                                                    command=self.printbt)
@@ -633,7 +635,7 @@ class MyMainWindowFrame(customtkinter.CTkFrame):
         if x is not None and x != '' and len(x) > 3:
             name = self.checkbox.get().rstrip()
             Id_Dir[name] = x
-            print(Id_Dir)
+
             with open(r'Archive\IdDir.txt', 'w', encoding='utf-8') as idfd:
                 json.dump(Id_Dir, idfd)
             self.comandUpd(self.title.strip())
