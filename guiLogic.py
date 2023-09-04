@@ -31,6 +31,7 @@ customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("blue")
 
 Id_Dir = {}
+
 logging.basicConfig(level=logging.INFO, filename="loggs\\ArchUt.log", filemode="a",
                     format="%(asctime)s %(levelname)s %(message)s")
 
@@ -649,17 +650,19 @@ class MyMainWindowFrame(customtkinter.CTkFrame):
                 for i in x:
                     os.remove(f'Archive/Combat/{name}/{i}')
                 os.rmdir(f'Archive/Combat/{name}')
-            Id_Dir = {}
+            del Id_Dir[name]
             os.remove(r'Archive\IdDir.txt')
             self.comandUpd(self.title.strip())
 
         except FileNotFoundError as f:
+            name = self.checkbox.get().rstrip()
             logging.error('Файла для удаления нет', exc_info=True)
-            Id_Dir = {}
+            del Id_Dir[name]
             os.remove(r'Archive\IdDir.txt')
             self.comandUpd(self.title.strip())
         except Exception as f:
-            Id_Dir = {}
+            name = self.checkbox.get().rstrip()
+            del Id_Dir[name]
             os.remove(r'Archive\IdDir.txt')
             self.comandUpd(self.title.strip())
 

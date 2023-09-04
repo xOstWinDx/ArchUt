@@ -95,8 +95,10 @@ class MyNotifi:
                     # self.bot.send_message(self.CHAT_ID,f'{call.data} - Выполненно')
                     self.bot.edit_message_text(chat_id=self.CHAT_ID, message_id=call.message.id,
                                                text=f'{call.data} - Выполнено')
+                    logging.info("Пометил как выполненное: ",call.data)
                 else:
                     self.bot.delete_message(chat_id=self.CHAT_ID, message_id=call.message.id)
+                    logging.info("Уже нажимал, чо?: ", call.data)
 
     def clearDone(self):
         global DoneDay
@@ -112,6 +114,7 @@ class MyNotifi:
 
     def SendNotify(self, name, inf: str = 'Default'):
         global DoneDay
+        logging.info("Прилетел увед: ",name)
         time.sleep(0.5)
         CHAT_ID = os.getenv('CHATID')
 
@@ -191,7 +194,7 @@ class MyNotifi:
                         done = types.InlineKeyboardButton('|Выполнено:\U00002705|', callback_data=name)
                         markup.add(done)
                         self.bot.send_message(CHAT_ID,
-                                              f'\U0001F4DA Не забудь сходить в {name}, булава сама себя не выбьет!',
+                                              f'\U0001F4DA Не забудь сходить в Библиотеку, булава сама себя не выбьет!',
                                               reply_markup=markup)
                     elif name == "Дейлики":
                         markup = types.InlineKeyboardMarkup(row_width=1)
@@ -356,11 +359,16 @@ class MyNotifi:
         schedule.every().thursday.at("20:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Око бури')
         schedule.every().saturday.at("20:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Око бури')
 
-        schedule.every(3).hours.do(self.SendNotify, 'Лицензии')
-        schedule.every(5).hours.do(self.SendNotify, 'Вексели')
-        schedule.every(4).hours.do(self.SendNotify, 'Дейлики')
-        schedule.every(150).minutes.do(self.SendNotify, 'Библиотека')
-        schedule.every(150).minutes.do(self.SendNotify, 'Порт-Аргенто')
+        schedule.every(1).hours.do(self.SendNotify, 'Лицензии')
+        schedule.every().day.at("23:10", timezone("Europe/Moscow")).do(self.SendNotify, 'Лицензии')
+        schedule.every(50).minutes.do(self.SendNotify, 'Вексели')
+        schedule.every().day.at("23:45", timezone("Europe/Moscow")).do(self.SendNotify, 'Вексели')
+        schedule.every(70).minutes.do(self.SendNotify, 'Дейлики')
+        schedule.every().day.at("23:20", timezone("Europe/Moscow")).do(self.SendNotify, 'Дейлики')
+        schedule.every(2).hours.do(self.SendNotify, 'Библиотека')
+        schedule.every().day.at("22:40", timezone("Europe/Moscow")).do(self.SendNotify, 'Библиотека')
+        schedule.every(90).minutes.do(self.SendNotify, 'Порт-Аргенто')
+        schedule.every().day.at("22:50", timezone("Europe/Moscow")).do(self.SendNotify, 'Порт-Аргенто')
 
         # schedule.every(3).seconds.do(self.SendNotify, 'Дейлики')
         # schedule.every(7).seconds.do(self.SendNotify, 'Лицензии')
@@ -405,7 +413,7 @@ class MyNotifi:
                                 pakTh.start()
                             logs.remove(i)
                         if "выкуплен с аукциона" in i:
-                            self.SendNotify('Аук', i)
+                            self.SendNotify('Аукцион', i)
                             logs.remove(i)
                         if "Война в области «Сверкающее побережье» завершена." in i:
                             self.SendNotify('Мирка-Cевер', i)
