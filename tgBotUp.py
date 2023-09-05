@@ -88,11 +88,16 @@ class MyNotifi:
         @self.bot.message_handler(commands=['start'])
         def start(message):
             global CHAT_ID
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=True)
+            but1 = types.KeyboardButton('Что сегодня осталось сделать?')
+            but2 = types.KeyboardButton('Помощь по использованию бота',)
+            markup.add(but1)
+            markup.add(but2)
             xs = open('.envChat', 'w')
             xs.write(f"CHATID={str(message.chat.id)}")
             xs.close()
             CHAT_ID = os.getenv('CHATID')
-            self.bot.send_message(message.chat.id, 'Бот успешно сохранил айди чата')
+            self.bot.send_message(message.chat.id, 'Бот успешно сохранил айди чата',reply_markup=markup)
             load_dotenv('.envChat')
             load_dotenv('.envTok')
             self.CHAT_ID = os.getenv('CHATID')
@@ -114,12 +119,15 @@ class MyNotifi:
                 with open('Archive/DumpDay.txt', 'w', encoding='utf-8') as dayz:
                     json.dump(DoneDay, dayz)
 
-        @self.bot.message_handler(commands=['status'])
-        def status(message):
+        @self.bot.message_handler(content_types=['text'])
+        def status(message:types.Message):
             global DoneDay
-            for i in ['Лицензии', 'Вексели', 'Порт-Аргенто', 'Библиотека', 'Рубеж', "Дейлики"]:
-                if DoneDay[i]:
-                    self.SendNotify(i)
+            if message.text == 'Что сегодня осталось сделать?':
+                for i in ['Лицензии', 'Вексели', 'Порт-Аргенто', 'Библиотека', 'Рубеж', "Дейлики"]:
+                    if DoneDay[i]:
+                        self.SendNotify(i)
+            if message.text == 'Помощь по использованию бота':
+                self.bot.send_message(self.CHAT_ID,'<a href="https://alekseis-organization-2.gitbook.io/untitled/#about">Документация</a>',parse_mode="HTML")
 
     def gettime(self):
         logging.info('Отправил запрос на сайт')
