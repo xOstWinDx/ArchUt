@@ -191,27 +191,27 @@ class MyNotifi:
                         self.bot.send_message(CHAT_ID, '\U0001F313 Скоро рейд на <b>новый день</b>\n успей вступить!',
                                               parse_mode='HTML')
                     elif name == 'Даскшир':
-                        self.bot.send_message(CHAT_ID, f'\U0001F6E1 Через 10 минут начнётся: <b>{name}</b>\n',
+                        self.bot.send_message(CHAT_ID, f'\U0001F6E1 Через <b>10 минут</b> начнётся: <b>{name}</b>\n',
                                               parse_mode='HTML')
                     elif name == 'Спруты' or name == 'Око бури':
                         self.bot.send_message(CHAT_ID,
-                                              f'\U0001F419 Через 10 минут начнётся: <b>{name}</b>, не пропусти!',
+                                              f'\U0001F419 Через <b>10 минут</b> начнётся: <b>{name}</b>, не пропусти!',
                                               parse_mode='HTML')
                     elif name == 'Кракен' or name == 'Левиафан':
                         self.bot.send_message(CHAT_ID,
-                                              f'\U0001F419 Через 30 минут начнётся: <b>{name}</b>, не пропусти!',
+                                              f'\U0001F419 Через <b>30 минут</b> начнётся: <b>{name}</b>, не пропусти!',
                                               parse_mode='HTML')
                     elif name == 'Дельфиец':
                         self.bot.send_message(CHAT_ID,
-                                              f'\U0001F30A Через 30 минут начнётся: <b>{name}</b>, не пропусти!',
+                                              f'\U0001F30A Через <b>30 минут</b> начнётся: <b>{name}</b>, не пропусти!',
                                               parse_mode='HTML')
                     elif name == 'Ксанатос':
                         self.bot.send_message(CHAT_ID,
-                                              f'\U0001F432 Через 30 минут начнётся: <b>{name}</b>, не пропусти!',
+                                              f'\U0001F432 Через <b>30 минут</b> начнётся: <b>{name}</b>, не пропусти!',
                                               parse_mode='HTML')
                     elif name == 'Осада':
                         self.bot.send_message(CHAT_ID,
-                                              f'\U0001F3AAЧерез 30 минут начнётся: <b>{name}</b>, не пропусти!',
+                                              f'\U0001F3AAЧерез <b>30 минут</b> начнётся: <b>{name}</b>, не пропусти!',
                                               parse_mode='HTML')
 
                     elif name == 'Лицензии':
@@ -269,34 +269,34 @@ class MyNotifi:
                         done = types.InlineKeyboardButton('|Выполнено:\U00002705|', callback_data=name)
                         markup.add(done)
                         self.bot.send_message(CHAT_ID,
-                                              f'\U00002694 Через 10 минут начнутся: <b>{name}</b>, не пропусти!\n'
-                                              '  ППЗ: Рег.Община - <u>кв у НПС, слева от входа в рег.общ.</u>\n',parse_mode='HTML',
+                                              f'\U00002694 Через <b>10 минут</b> начнутся: <b>{name}</b>, не пропусти!\n'
+                                              '  <u>ППЗ: Рег.Община</u> - кв у НПС, слева от входа в рег.общ.\n',parse_mode='HTML',
                                               reply_markup=markup)
                     elif name == 'Мечи: Восток':
                         markup = types.InlineKeyboardMarkup(row_width=1)
                         done = types.InlineKeyboardButton('|Выполнено:\U00002705|', callback_data=name)
                         markup.add(done)
                         self.bot.send_message(CHAT_ID,
-                                              f'\U00002694 Через 10 минут начнутся: <b>{name}</b>, не пропусти!\n'
-                                              '  Инистра: Рег.Община - <u>кв у НПС, слева от входа в рег.общ.</u>\n',parse_mode='HTML',
+                                              f'\U00002694 Через <b>10 минут</b> начнутся: <b>{name}</b>, не пропусти!\n'
+                                              '  <u>Инистра: Рег.Община</u> - кв у НПС, слева от входа в рег.общ.\n',parse_mode='HTML',
                                               reply_markup=markup)
                     elif name == "Эфен":
                         markup = types.InlineKeyboardMarkup(row_width=1)
                         done = types.InlineKeyboardButton('|Выполнено:\U00002705|', callback_data=name)
                         markup.add(done)
                         self.bot.send_message(CHAT_ID,
-                                              f"\U00002694 Через 10 минут начнётся: <b>{name}</b>, не пропусти!\n"
-                                              "  Эфен'Хал: <u>Форпост Щ.И.Т.а - кв у НПС</u>\n"
-                                              "  Эфен'Хал: <u>Форпост вашей фракции - Мобы</u>",parse_mode='HTML',
+                                              f"\U00002694 Через <b>10 минут</b> начнётся: <b>{name}</b>, не пропусти!\n"
+                                              "  <u>Эфен'Хал: Форпост Щ.И.Т.а</u> - кв у НПС\n"
+                                              "  <u>Эфен'Хал: Форпост вашей фракции</u> - Мобы",parse_mode='HTML',
                                               reply_markup=markup)
                     elif name == "Бухта":
                         markup = types.InlineKeyboardMarkup(row_width=1)
                         done = types.InlineKeyboardButton('|Выполнено:\U00002705|', callback_data=name)
                         markup.add(done)
                         self.bot.send_message(CHAT_ID,
-                                              f"\U00002694 Через 10 минут начнётся: <b>{name}</b>, не пропусти!\n"
-                                              "  Бухта китобоев: <u>Форпост Щ.И.Т.а - кв у НПС</u>\n"
-                                              "  Бухта китобоев: <u>Форпост вашей фракции - Мобы</u>",parse_mode='HTML',
+                                              f"\U00002694 Через <b>10 минут</b> начнётся: <b>{name}</b>, не пропусти!\n"
+                                              "  <u>Бухта китобоев: Форпост Щ.И.Т.а</u> - кв у НПС\n"
+                                              "  <u>Бухта китобоев: Форпост вашей фракции</u> - Мобы",parse_mode='HTML',
                                               reply_markup=markup)
                     else:
                         if self.zagl:
@@ -305,38 +305,38 @@ class MyNotifi:
                             markup.add(done)
                             if name == 'АГЛ(JMG)':
                                 self.bot.send_message(CHAT_ID,
-                                                      f'\U00002694 Через 10 минут начнётся: <b>{name}</b>, не пропусти!\n'
-                                                      '  <u>Бездна: Нагашар - Ашъяра</u>\n'
-                                                      '  <u>Солнечные поля - Глен, Лорея</u>\n'
+                                                      f'\U00002694 Через <b>10 минут</b> начнётся: <b>{name}</b>, не пропусти!\n'
+                                                      '  <u>Бездна: Нагашар</u> - Ашъяра\n'
+                                                      '  <u>Солнечные поля</u> - Глен, Лорея\n'
                                                       ' <b>!Квест выдаётся при агре босса!</b>',parse_mode='HTML',
                                                       reply_markup=markup)
                             elif name == 'Призрачка':
                                 self.bot.send_message(CHAT_ID,
-                                                      f'\U0001F47B Через 10 минут начнётся: <b>{name}</b>, не пропусти!\n'
+                                                      f'\U0001F47B Через <b>10 минут</b> начнётся: <b>{name}</b>, не пропусти!\n'
                                                       '  <b>Запад:</b>\n'
-                                                      '     <u>ППЗ: Рег.Община - Кв на табличке</u>\n'
-                                                      '     <u>ППЗ: Застава - НПС для сдачи</u>\n'
+                                                      '     <u>ППЗ: Рег.Община</u> - Кв на табличке\n'
+                                                      '     <u>ППЗ: Застава</u> - НПС для сдачи\n'
                                                       '  <b>Восток:</b>\n'
-                                                      '     <u>Инистра: Каор-Норд - Кв на табличке</u>\n'
-                                                      '     <u>Инистра: Ривергард - НПС для сдачи</u>',
+                                                      '     <u>Инистра: Каор-Норд</u> - Кв на табличке\n'
+                                                      '     <u>Инистра: Ривергард</u> - НПС для сдачи',parse_mode='HTML',
                                                       reply_markup=markup)
                             elif name == 'Кровь':
                                 self.bot.send_message(CHAT_ID,
-                                                      f'\U0001FA78 Через 10 минут начнётся: <b>{name}</b>, не пропусти!\n'
+                                                      f'\U0001FA78 Через <b>10 минут</b> начнётся: <b>{name}</b>, не пропусти!\n'
                                                       '  <b>Запад:</b>\n'
-                                                      '     <u>ППЗ: Рег.Община - Кв на выходе у НПС</u>\n'
+                                                      '     <u>ППЗ: Рег.Община</u> - Кв на выходе у НПС\n'
                                                       '  <b>Восток:</b>\n'
-                                                      '     <u>Инистра: Рег.Община - Кв на выходе у НПС</u>',
+                                                      '     <u>Инистра: Рег.Община</u> - Кв на выходе у НПС',parse_mode='HTML',
                                                       reply_markup=markup)
                             elif name == 'Анталон':
                                 self.bot.send_message(CHAT_ID,
-                                                      f'\U0001F52E Через 10 минут начнётся: <b>{name}</b>, не пропусти!\n'
+                                                      f'\U0001F52E Через <b>10 минут</b> начнётся: <b>{name}</b>, не пропусти!\n'
                                                       '  <u>Солнечные поля - Кв дают при агре босса!</u>\n'
-                                                      '  <b>p.s на месте тп можно взять квесты на кровь!</b>',
+                                                      '  <b>p.s на месте тп можно взять квесты на кровь!</b>',parse_mode='HTML',
                                                       reply_markup=markup)
                             else:
                                 self.bot.send_message(CHAT_ID,
-                                                      f'\U00002694 Через 10 минут начнётся: <b>{name}</b>, не пропусти!',
+                                                      f'\U00002694 Через <b>10 минут</b> начнётся: <b>{name}</b>, не пропусти!',
                                                       reply_markup=markup)
                             self.zagl = False
                             threading.Timer(500, zag).start()
