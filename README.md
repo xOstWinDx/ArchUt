@@ -2,7 +2,6 @@
       <img src="https://i.ibb.co/v1PCgkN/ikonka-2-0.png", alt='Project Logo' width="726">
 </p>
 
-
 ## About
 
 Программа созданная для отслеживания игровых логов и их парсинга.
@@ -14,15 +13,9 @@
  различные игровые ивенты, настаиваемые внутри приложения.
  
 
-
 ## Documentation
 
 Documentation Here
-
-## Distribute
-
-- [Я.Диск](https://disk.yandex.ru/d/0cktq-rn5Qn1eQ)
-
 
 ## Developers
 
