@@ -66,7 +66,6 @@ class getSpisok():
                     Id_Dir[i.strip()] = i.strip()
             json.dump(Id_Dir, idfd)
         for i in Id_Dir.keys():
-
             logicMain.AnalyseLogAndDoGraph.DoHealAndDamage(Id_Dir[i])
         idfd.close()
 
@@ -132,7 +131,7 @@ class MyTgBotFtame(customtkinter.CTkFrame):
         self.checkbox = MyCheckFrame(self.leftFr,
                                      values=['АГЛ(JMG)', 'Кровь', 'Призрачка',
                                              'Анталон',
-                                             'Новый день', 'Лицензии', 'Вексели', 'Порт-Аргенто', 'Библиотека',
+                                             'Новый день', 'Лицензии', 'Вексели', 'Порт-Аргенто', 'Библиотека', "Рубеж",
                                              'Дейлики',
                                              'Даскшир', 'Гартрейн', 'Мечи: Запад', 'Мечи: Восток', 'Эфен',
                                              'Бухта',
