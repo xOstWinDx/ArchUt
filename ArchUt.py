@@ -155,7 +155,7 @@ def logListenner():
             time.sleep(2)
             try:
                 with open(fr"{PATH_DOCU}\ArcheRage\Misc.log", "r",
-                          encoding='utf-8') as file:
+                          encoding='utf-8',errors='replace') as file:
                     logMisc = file.readlines()
                     for i in logMisc:
                         if 'присоединяется к отряду.' in i or 'присоединяется к рейду.' in i:
